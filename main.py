@@ -2,7 +2,10 @@ import os
 from sys import argv
 import pygame
 
-from geocoder_api import get_coordinates
+from geocoder_api import (
+    get_coordinates,
+    get_coordinates_and_span,
+)
 from static_maps_api import get_map
 
 
@@ -13,8 +16,13 @@ def main() -> None:
         print('No data')
         return
 
+    # Показываем карту с фиксированным масштабом.
     lat, lon = get_coordinates(toponym_to_find)
     show_map((lat, lon), (0.005, 0.005), 'map')
+
+    # Показываем карту с масштабом, подобранным по заданному объекту.
+    (lat, lon), (dx, dy) = get_coordinates_and_span(toponym_to_find)
+    show_map((lat, lon), (dx, dy), 'map')
 
 
 def show_map(ll: tuple[float, float], spn: tuple[float, float], map_type: str) -> None:
@@ -34,4 +42,3 @@ def show_map(ll: tuple[float, float], spn: tuple[float, float], map_type: str) -
 
 
 main()
-

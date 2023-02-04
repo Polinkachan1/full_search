@@ -1,5 +1,6 @@
 import requests
 
+from config import API_KEY
 
 def get_coordinates(address: str):
     toponym = geocoder_request(address)
@@ -35,7 +36,7 @@ def get_coordinates_and_span(address: str):
     return (toponym_longitude, toponym_lattitude), (dx, dy)
 
 
-API_KEY = '40d1649f-0493-4b70-98ba-98533de7710b'
+
 
 
 def geocoder_request(address: str):

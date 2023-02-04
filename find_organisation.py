@@ -2,7 +2,7 @@ import requests
 from config import SEARCH_MAPS_API_KEY
 
 
-def find_organisation(ll, span, organization_type):
+def find_nearest_organisation(ll, span, organization_type):
     response = requests.get('http://search-maps.yandex.ru/1.x/', params={
         'apikey': SEARCH_MAPS_API_KEY,
         'spn': ','.join(map(str, span)),

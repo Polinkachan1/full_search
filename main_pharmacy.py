@@ -1,7 +1,7 @@
 from sys import argv
 from textwrap import dedent
 
-from find_organisation import find_nearest_organisation
+from search_maps_api import find_nearest_organisation
 from geocoder_api import (
     get_coordinates,
 )

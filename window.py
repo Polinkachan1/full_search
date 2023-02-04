@@ -1,42 +1,34 @@
-from random import choice
-from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
-    QMainWindow, QLabel,
+    QMainWindow,
 )
-from PyQt5.QtGui import (
-    QMouseEvent,
-    QKeyEvent,
-    QPixmap,
-)
+from PyQt5.QtGui import QPixmap
+
+from static_maps_api import get_map
+from window_ui import Ui_MainWindow
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self) -> None:
         super().__init__()
-        self._images = [
-            'car_1.jpg',
-            'car_2.jpg',
-        ]
-        self._selected_image = self._images[0]
+        self.setupUi(self)
+        self._map_zoom = 5
+        self._map_ll = 37.977751, 55.757718
+        self._map_l = 'map'
         self._init_ui()
 
     def _init_ui(self) -> None:
-        self.setGeometry(300, 300, 600, 600)
-        self.image = QLabel(self)
-        self.image.setGeometry(0, 0, 60, 38)
-        self._pixmap = QPixmap(self._selected_image)
-        self.image.setPixmap(self._pixmap)
-        self.show()
-        self.setMouseTracking(True)
+        self._refresh_map()
 
-    def mouseMoveEvent(self, event: QMouseEvent) -> None:
-        self.image.move(event.x(), event.y())
+    def _refresh_map(self) -> None:
+        image_data = get_map(ll=self._map_ll, zoom=self._map_zoom, map_type=self._map_l)
+        # создание временного файла (плохой способ)
+        # with NamedTemporaryFile('wb', prefix='qt-image-', suffix='.png') as file:
+        #     file.write(image_data)
+        #     file.flush()
+        #     pixmap = QPixmap(file.name)
+        #     self.map_label.setPixmap(pixmap)
+        pixmap = QPixmap()
+        pixmap.loadFromData(image_data)
+        self.map_label.setPixmap(pixmap)
 
-    def keyPressEvent(self, event: QKeyEvent) -> None:
-        if event.key() == Qt.Key_Space:
-            self._selected_image = choice(self._images)
-            self._paint()
 
-    def _paint(self) -> None:
-        self._pixmap.load(self._selected_image)
-        self.image.setPixmap(self._pixmap)
